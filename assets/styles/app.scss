@@ -1,3 +1,13 @@
+@import "fontawesome-4.7";
+@import "bootstrap";
+
 body {
     background-color: lightgray;
+}
+
+.logo-user {
+    color: black;
+    font-size: 2rem;
+    display: inline-block;
+    justify-content: center;
 }
