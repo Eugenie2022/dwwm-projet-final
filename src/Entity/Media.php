@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MediaRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -21,7 +22,7 @@ class Media
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'medias')]
     #[ORM\JoinColumn(nullable: false)]
-    private $trickMedia;
+    private ?Trick $trickMedia;
 
     public function getId(): ?int
     {

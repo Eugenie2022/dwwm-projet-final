@@ -29,17 +29,17 @@ class Trick
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private $userTrick;
+    private ?User $userTrick;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private $catTrick;
+    private ?Category $catTrick;
 
     #[ORM\OneToMany(mappedBy: 'trickMedia', targetEntity: Media::class, orphanRemoval: true)]
-    private $medias;
+    private Collection $medias;
 
     #[ORM\OneToMany(mappedBy: 'trickCom', targetEntity: Comment::class, orphanRemoval: true)]
-    private $comments;
+    private Collection $comments;
 
     public function __construct()
     {

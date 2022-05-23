@@ -10,9 +10,11 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ path('home') }}">Page d'accueil</a>
                 </li>
+                {% if app.user %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Ajouter une figure</a>
                 </li>
+                {% endif %}
 
             </ul>
             <div class="d-flex gap-2">

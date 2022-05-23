@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
@@ -16,19 +17,16 @@ class Comment
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $type;
-
     #[ORM\Column(type: 'datetime')]
     private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private $trickCom;
+    private ?Trick $trickCom;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private $userCom;
+    private ?User $userCom;
 
     public function getId(): ?int
     {
@@ -45,11 +43,6 @@ class Comment
         $this->content = $content;
 
         return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
     }
 
     public function setType(string $type): self

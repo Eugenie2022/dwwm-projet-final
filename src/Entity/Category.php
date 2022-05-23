@@ -19,7 +19,7 @@ class Category
     private $nameCat;
 
     #[ORM\OneToMany(mappedBy: 'catTrick', targetEntity: Trick::class, orphanRemoval: true)]
-    private $tricks;
+    private Collection $tricks;
 
     public function __construct()
     {

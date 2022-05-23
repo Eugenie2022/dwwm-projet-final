@@ -39,10 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $photo;
 
     #[ORM\OneToMany(mappedBy: 'userTrick', targetEntity: Trick::class, orphanRemoval: true)]
-    private $tricks;
+    private Collection $tricks;
 
     #[ORM\OneToMany(mappedBy: 'userCom', targetEntity: Comment::class, orphanRemoval: true)]
-    private $comments;
+    private Collection $comments;
 
     public function __construct()
     {
