@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Trick;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,8 +13,9 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(ManagerRegistry $doctrine): Response
     {
+        $trickRepository = $doctrine->getRepository(Trick::class);
         return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
+            'tricks' => $trickRepository->findAll(),
         ]);
     }
 

@@ -11,47 +11,25 @@
     <section>
         <div class="container my-5">
             <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for trick in tricks %}
                 <div class="col">
                     <div class="card h-100">
-                        <img src="..." class="card-img-top" alt="...">
+                        <img src="uploads/{{ trick.thumbnail }}" class="card-img-top" alt="{{ trick.thumbnail }}">
                         <div class="card-body">
-                            <h5 class="card-title">Nom de la figure</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <h5 class="card-title">{{ trick.nameTrick }}</h5>
+                            <h6 class="card-title">{{ trick.catTrick.nameCat }}</h6>
+                            <p class="card-text">{{ trick.description }}</p>
                         </div>
                         <div class="btn-group m-3" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-info">Découvrir</button>
-                            <button type="button" class="btn btn-outline-info">Modifier</button>
+                            <a href="{{ path('app_trick_show', {'id': trick.id}) }}" class="btn btn-info">Découvrir</a>
+                            {% if app.user %}
+                            <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="btn btn-outline-info">Modifier</a>
                             <button type="button" class="btn btn-outline-danger">Supprimer</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a short card.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>

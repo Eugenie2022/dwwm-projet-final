@@ -31,7 +31,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $frontFlip->setNameTrick('Front Flip');
         $frontFlip->setDescription('Rotation vertical en avant.');
         $frontFlip->setCreatedAt(new \DateTime());
-        $frontFlip->setThumbnail('front-flip-tb');
+        $frontFlip->setThumbnail('front-flip-tb.jpg');
         $frontFlip->setUserTrick($this->getReference(UserFixtures::ADMIN_REFERENCE));
         $frontFlip->setCatTrick($this->getReference(CategoryFixtures::FLIPS_REFERENCE));
         $manager->persist($frontFlip);
