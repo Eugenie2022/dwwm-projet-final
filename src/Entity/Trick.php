@@ -6,6 +6,7 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 class Trick
@@ -13,19 +14,19 @@ class Trick
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $nameTrick;
+    private string $nameTrick;
 
     #[ORM\Column(type: 'text')]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $thumbnail;
+    private string $thumbnail;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private \DateTime $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]

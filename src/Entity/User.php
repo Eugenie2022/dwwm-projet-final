@@ -15,28 +15,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $email;
+    private string $email;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private string $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $firstname;
+    private string $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $userName;
+    private string $userName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $photo;
+    private string $photo;
 
     #[ORM\OneToMany(mappedBy: 'userTrick', targetEntity: Trick::class, orphanRemoval: true)]
     private Collection $tricks;
@@ -227,4 +227,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function __toString(){
+        return $this->userName; // Remplacer champ par une propriété "string" de l'entité
+    }
+
 }

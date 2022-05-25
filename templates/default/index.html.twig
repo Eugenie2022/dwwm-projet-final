@@ -20,12 +20,14 @@
                             <h6 class="card-title">{{ trick.catTrick.nameCat }}</h6>
                             <p class="card-text">{{ trick.description }}</p>
                         </div>
-                        <div class="btn-group m-3" role="group" aria-label="Basic example">
-                            <a href="{{ path('app_trick_show', {'id': trick.id}) }}" class="btn btn-info">Découvrir</a>
-                            {% if app.user %}
-                            <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="btn btn-outline-info">Modifier</a>
-                            <button type="button" class="btn btn-outline-danger">Supprimer</button>
-                            {% endif %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group m-3" role="group" aria-label="Basic example">
+                                <a href="{{ path('app_trick_show', {'id': trick.id}) }}" class="btn btn-info">Découvrir</a>
+                                {% if app.user %}
+                                <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="btn btn-outline-info">Modifier</a>
+                                <a href="{{ path('app_trick_delete', {'id': trick.id}) }}" class="btn btn-outline-danger">Supprimer</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
