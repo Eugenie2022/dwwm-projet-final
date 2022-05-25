@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trick index{% endblock %}
+
+{% block body %}
+    <div class="container text-center my-5">
+        <h1>Figures de snowboard</h1>
+    </div>
+
+    <section>
+        <div class="container my-5">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for trick in tricks %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="/uploads/{{ trick.thumbnail }}" class="card-img-top" alt="{{ trick.thumbnail }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ trick.nameTrick }}</h5>
+                                <h6 class="card-title">{{ trick.catTrick.nameCat }}</h6>
+                                <p class="card-text">{{ trick.description }}</p>
+                            </div>
+                            <div class="btn-group m-3" role="group" aria-label="Basic example">
+                                <a href="{{ path('app_trick_show', {'id': trick.id}) }}" class="btn btn-info">Découvrir</a>
+                                {% if app.user %}
+                                    <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="btn btn-outline-info">Modifier</a>
+                                    <a href="{{ path('app_trick_delete', {'id': trick.id}) }}" class="btn btn-outline-danger">Supprimer</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{{ path('app_trick_new') }}">Create new</a>
+        </div>
+    </section>
+
+{% endblock %}
