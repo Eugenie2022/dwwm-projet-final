@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -25,8 +26,8 @@ class Trick
     #[ORM\Column(type: 'string', length: 255)]
     private string $thumbnail;
 
-    #[ORM\Column(type: 'datetime')]
-    private \DateTime $createdAt;
+    #[ORM\Column (type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -36,7 +37,7 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $catTrick;
 
-    #[ORM\OneToMany(mappedBy: 'trickMedia', targetEntity: Media::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trickMedia', targetEntity: Media::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $medias;
 
     #[ORM\OneToMany(mappedBy: 'trickCom', targetEntity: Comment::class, orphanRemoval: true)]
@@ -46,6 +47,7 @@ class Trick
     {
         $this->medias = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->setCreatedAt(new \DateTimeImmutable());
     }
 
     public function getId(): ?int
@@ -96,7 +98,7 @@ class Trick
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -184,4 +186,5 @@ class Trick
 
         return $this;
     }
+
 }

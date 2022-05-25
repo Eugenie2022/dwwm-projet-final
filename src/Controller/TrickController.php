@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\TrickType;
+use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,14 +26,22 @@ class TrickController extends AbstractController
     }
 
     #[Route('/new', name: 'app_trick_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, TrickRepository $trickRepository): Response
+    public function new(Request $request, TrickRepository $trickRepository, FileUploader $fileUploader): Response
     {
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $trick->setUserTrick($this->getUser());
 
+            // Gérer l'upload de la photo
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('thumbnail')->getData();
+            if ($photoFile) {
+                $photoFileName = $fileUploader->upload($photoFile);
+                $trick->setThumbnail($photoFileName);
+            }
 
             $trickRepository->add($trick, true);
             return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
@@ -52,14 +62,23 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Trick $trick, TrickRepository $trickRepository): Response
+    public function edit(Request $request, Trick $trick, TrickRepository $trickRepository, FileUploader $fileUploader): Response
     {
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trickRepository->add($trick, true);
+            $trick->setUserTrick($this->getUser());
 
+            // Gérer l'upload de la photo
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('thumbnail')->getData();
+            if ($photoFile) {
+                $photoFileName = $fileUploader->upload($photoFile);
+                $trick->setThumbnail($photoFileName);
+            }
+
+            $trickRepository->add($trick, true);
             return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
         }
 

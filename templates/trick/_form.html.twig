@@ -1,9 +1,70 @@
 {{ form_start(form) }}
-
-    <div class="d-flex justify-content-start">
-    {{ form_widget(form) }}
+    <div class="d-flex flex-column justify-content-start">
+    {{ form_row(form.nameTrick) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.thumbnail) }}
+    {{ form_row(form.catTrick) }}
     </div>
-    <button class="btn btn-info" type="submit">{{ button_label|default('Enregistrer') }}</button>
-
+    <h3>Medias</h3>
+    <ul class="medias"
+        data-index="{{ form.medias|length > 0 ? form.medias|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_widget(form.medias.vars.prototype)|e('html_attr') }}">
+        {% for media in form.medias %}
+            <li>{{ form_row(media.type) }}</li>
+            <li>{{ form_row(media.path) }}</li>
+        {% endfor %}
+    </ul>
+    <button type="button" class="add_item_link" data-collection-holder-class="medias">Ajouter un media</button>
 
 {{ form_end(form) }}
+<script>
+
+    const addFormToCollection = (e) => {
+        const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+        const item = document.createElement('li');
+
+        item.innerHTML = collectionHolder
+            .dataset
+            .prototype
+            .replace(
+                /__name__/g,
+                collectionHolder.dataset.index
+            );
+
+        collectionHolder.appendChild(item);
+
+        collectionHolder.dataset.index++;
+
+        addTagFormDeleteLink(item);
+    };
+
+    const addTagFormDeleteLink = (item) => {
+        const removeFormButton = document.createElement('button');
+        removeFormButton.innerText = 'Delete this tag';
+
+        item.append(removeFormButton);
+
+        removeFormButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            // remove the li for the tag form
+            item.remove();
+        });
+    }
+
+    document
+        .querySelectorAll('.add_item_link')
+        .forEach(btn => {
+            btn.addEventListener("click", addFormToCollection)
+
+
+        });
+
+    document
+        .querySelectorAll('ul.tags li')
+        .forEach((tag) => {
+            addTagFormDeleteLink(tag)
+        })
+
+
+</script>
