@@ -3,9 +3,16 @@
 {% block title %}New Trick{% endblock %}
 
 {% block body %}
-    <h1>Ajouter une figure</h1>
+    <div class="container">
+        <h1 class="my-4">Ajouter une figure</h1>
 
-    {{ include('trick/_form.html.twig') }}
-    <br>
-    <a href="{{ path('app_trick_index') }}">back to list</a>
+        {{ include('trick/_form.html.twig') }}
+
+        <div class="d-flex justify-content-end align-items-end">
+            <a class="btn btn-secondary mb-3" href="{{ path('app_trick_index') }}">Retour à la liste des figures</a>
+        </div>
+    </div>
+
+
+
 {% endblock %}

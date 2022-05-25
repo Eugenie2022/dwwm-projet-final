@@ -1,5 +1,9 @@
 {{ form_start(form) }}
 
+    <div class="d-flex justify-content-start">
+    {{ form_widget(form) }}
+    </div>
+    <button class="btn btn-info" type="submit">{{ button_label|default('Enregistrer') }}</button>
+
 
 {{ form_end(form) }}
-<button class="btn">{{ button_label|default('Save') }}</button>
