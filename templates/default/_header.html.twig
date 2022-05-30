@@ -19,8 +19,9 @@
             </ul>
             <div class="d-flex gap-2">
                 {% if app.user %}
-                <a class="btn btn-secondary"  type="button" href="{{ path('logout') }}">Deconnexion</a>
+                    <p>Bonjour {{ app.user.firstname }}</p>
                 <a href="" class="logo-user"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
+                <a class="btn btn-secondary"  type="button" href="{{ path('logout') }}">Deconnexion</a>
                 {% else %}
                 <a href="{{ path('login') }}" class="btn btn btn-outline-info" type="button">Connexion</a>
                 <a href="{{ path('app_register') }}" class="btn btn-info" type="button">Inscription</a>

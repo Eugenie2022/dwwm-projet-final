@@ -24,8 +24,10 @@
                             <div class="btn-group m-3" role="group" aria-label="Basic example">
                                 <a href="{{ path('app_trick_show', {'id': trick.id}) }}" class="btn btn-info">Découvrir</a>
                                 {% if app.user %}
+                                    {% if trick.userTrick.id == app.user.id or is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="btn btn-outline-info">Modifier</a>
                                 <a href="{{ path('app_trick_delete', {'id': trick.id}) }}" class="btn btn-outline-danger">Supprimer</a>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>

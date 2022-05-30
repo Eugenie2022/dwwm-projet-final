@@ -8,6 +8,7 @@ use App\Form\TrickType;
 use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
 use App\Service\FileUploader;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/trick')]
+
 class TrickController extends AbstractController
 {
+
     #[Route('/', name: 'app_trick_index', methods: ['GET'])]
     public function index(TrickRepository $trickRepository): Response
     {
@@ -44,7 +47,7 @@ class TrickController extends AbstractController
             }
 
             $trickRepository->add($trick, true);
-            return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('trick/new.html.twig', [
@@ -64,9 +67,16 @@ class TrickController extends AbstractController
     #[Route('/{id}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Trick $trick, TrickRepository $trickRepository, FileUploader $fileUploader): Response
     {
-
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
+
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY') === false) {
+            return $this->redirectToRoute('home');
+
+        } if ($this->isGranted('ROLE_ADMIN') || ($this->getUser() === $trick->getUserTrick()) === false) {
+            return $this->redirectToRoute('home');
+
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setUserTrick($this->getUser());
@@ -80,22 +90,32 @@ class TrickController extends AbstractController
             }
 
             $trickRepository->add($trick, true);
-            return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('trick/edit.html.twig', [
+            return $this->renderForm('trick/edit.html.twig', [
             'trick' => $trick,
             'form' => $form,
         ]);
+
+//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
     }
 
     #[Route('/{id}', name: 'app_trick_delete', methods: ['POST'])]
     public function delete(Request $request, Trick $trick, TrickRepository $trickRepository): Response
     {
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY') === false) {
+            return $this->redirectToRoute('home');
+
+        } if ($this->isGranted('ROLE_ADMIN') || ( $this->getUser() === $trick->getUserTrick()) === false) {
+            return $this->redirectToRoute('home');
+        }
         if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
-            $trickRepository->remove($trick, true);
+                $trickRepository->remove($trick, true);
         }
 
-        return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
+
+        return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }
+
 }
