@@ -27,7 +27,14 @@ class MediaType extends AbstractType
                     'VideoFile' => 'Fichier Vidéo'
                 ]
             ])
-            ->add('path');
+            ->add('path', FileType::class, [
+                    'label' => 'Image Principale',
+                    'mapped' => false,
+                    'required' => false,
+                    'constraints' => [
+                        new Image()
+                        ]
+                    ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

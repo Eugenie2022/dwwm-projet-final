@@ -51,14 +51,7 @@ class TrickType extends AbstractType
                 'allow_delete' => true,
             ])
 
-//            ->add('path', FileType::class, [
-//                'label' => 'Image Principale',
-//                'mapped' => false,
-//                'required' => false,
-//                'constraints' => [
-//                    new Image()
-//                ],
-//            ])
+
 
 
 
