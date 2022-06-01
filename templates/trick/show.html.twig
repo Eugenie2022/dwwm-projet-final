@@ -8,10 +8,6 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ trick.id }}</td>
-            </tr>
-            <tr>
                 <th>NameTrick</th>
                 <td>{{ trick.nameTrick }}</td>
             </tr>
@@ -21,12 +17,22 @@
             </tr>
             <tr>
                 <th>Thumbnail</th>
-                <td>{{ trick.thumbnail }}</td>
+                <td><img src="/uploads/{{ trick.thumbnail }}" alt="{{ trick.nameTrick }}">{{ trick.thumbnail }}</td>
             </tr>
             <tr>
                 <th>CreatedAt</th>
-                <td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d') : '' }}</td>
             </tr>
+            <tr>
+                {% for media in trick.medias %}
+                <th>Média</th>
+                <td><img src="/uploads/{{ media.path }}" alt="">{{ media.path }}</td>
+                {% endfor %}
+            </tr>
+
+
+
+
         </tbody>
     </table>
 

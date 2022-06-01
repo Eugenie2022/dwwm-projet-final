@@ -5,10 +5,8 @@ namespace App\Controller;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\TrickType;
-use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
 use App\Service\FileUploader;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,32 +71,31 @@ class TrickController extends AbstractController
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY') === false) {
             return $this->redirectToRoute('home');
 
-        } if ($this->isGranted('ROLE_ADMIN') || ($this->getUser() === $trick->getUserTrick()) === false) {
-            return $this->redirectToRoute('home');
+        } if ($this->getUser() === $trick->getUserTrick() || $this->isGranted('ROLE_ADMIN')) {
 
-        }
+            if ($form->isSubmitted() && $form->isValid()) {
+                $trick->setUserTrick($this->getUser());
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setUserTrick($this->getUser());
+                // Gérer l'upload de la photo
+                /** @var UploadedFile $photoFile */
+                $photoFile = $form->get('thumbnail')->getData();
+                if ($photoFile) {
+                    $photoFileName = $fileUploader->upload($photoFile);
+                    $trick->setThumbnail($photoFileName);
+                }
 
-            // Gérer l'upload de la photo
-            /** @var UploadedFile $photoFile */
-            $photoFile = $form->get('thumbnail')->getData();
-            if ($photoFile) {
-                $photoFileName = $fileUploader->upload($photoFile);
-                $trick->setThumbnail($photoFileName);
+                $trickRepository->add($trick, true);
+                return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
             }
 
-            $trickRepository->add($trick, true);
-            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('home');
         }
 
             return $this->renderForm('trick/edit.html.twig', [
             'trick' => $trick,
             'form' => $form,
         ]);
-
-//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
     }
 
     #[Route('/{id}', name: 'app_trick_delete', methods: ['POST'])]
@@ -107,13 +104,14 @@ class TrickController extends AbstractController
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY') === false) {
             return $this->redirectToRoute('home');
 
-        } if ($this->isGranted('ROLE_ADMIN') || ( $this->getUser() === $trick->getUserTrick()) === false) {
+        } if ($this->getUser() === $trick->getUserTrick() || $this->isGranted('ROLE_ADMIN')) {
+
+            if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
+                $trickRepository->remove($trick, true);
+            }
+        } else {
             return $this->redirectToRoute('home');
         }
-        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
-                $trickRepository->remove($trick, true);
-        }
-
 
         return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }

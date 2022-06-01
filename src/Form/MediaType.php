@@ -35,7 +35,9 @@ class MediaType extends AbstractType
 //                        new Image()
 //                        ]
 //                    ]);
+
             ->add('path');
+            
     }
 
     public function configureOptions(OptionsResolver $resolver): void
