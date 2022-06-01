@@ -89,7 +89,7 @@ class TrickController extends AbstractController
             }
 
         } else {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home', [], Response::HTTP_UNAUTHORIZED);
         }
 
             return $this->renderForm('trick/edit.html.twig', [
