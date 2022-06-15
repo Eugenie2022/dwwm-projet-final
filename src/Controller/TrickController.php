@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Media;
 use App\Entity\Trick;
+use App\Form\CommentType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 #[Route('/trick')]
 
@@ -54,12 +58,27 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_trick_show', methods: ['GET'])]
-    public function show(Trick $trick): Response
+    #[Route('/{id}', name: 'app_trick_show', methods: ['GET', 'POST'])]
+    public function show(Trick $trick, CommentRepository $commentRepository, Request $request): Response
     {
-        return $this->render('trick/show.html.twig', [
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setUserCom($this->getUser());
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $comment->setTrickCom($trick);
+
+            $commentRepository->add($comment, true);
+            return $this->redirectToRoute('app_trick_show', ['id'=>$trick->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('trick/show.html.twig', [
             'trick' => $trick,
+            'form' => $form,
         ]);
+
     }
 
     #[Route('/{id}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
@@ -115,5 +134,6 @@ class TrickController extends AbstractController
 
         return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }
+
 
 }

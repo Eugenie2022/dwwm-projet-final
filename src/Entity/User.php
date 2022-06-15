@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $photo;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
 
     #[ORM\OneToMany(mappedBy: 'userTrick', targetEntity: Trick::class, orphanRemoval: true)]
     private Collection $tricks;
@@ -167,6 +171,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->photo = $photo;
 
+        return $this;
+    }
+
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
         return $this;
     }
 

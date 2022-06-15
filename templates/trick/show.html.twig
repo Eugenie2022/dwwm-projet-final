@@ -3,42 +3,49 @@
 {% block title %}Trick{% endblock %}
 
 {% block body %}
-    <h1>Trick</h1>
+<div class="container my-5">
+    <h1>{{ trick.nameTrick }}</h1>
+    <div class="d-flex justify-content-center justify-content-md-between my-5">
+        <div>
+            <h2>{{ trick.catTrick }}</h2>
+            <p>{{ trick.description }}</p>
+        </div>
+        <div>
+            <img width="500px" src="/uploads/{{ trick.thumbnail }}" alt="{{ trick.nameTrick }}">
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>NameTrick</th>
-                <td>{{ trick.nameTrick }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ trick.description }}</td>
-            </tr>
-            <tr>
-                <th>Thumbnail</th>
-                <td><img src="/uploads/{{ trick.thumbnail }}" alt="{{ trick.nameTrick }}">{{ trick.thumbnail }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                {% for media in trick.medias %}
-                <th>Média</th>
-                <td><img src="/uploads/{{ media.path }}" alt="">{{ media.path }}</td>
-                {% endfor %}
-            </tr>
-
-
-
-
-        </tbody>
-    </table>
 
     <a href="{{ path('app_trick_index') }}">back to list</a>
 
     <a href="{{ path('app_trick_edit', {'id': trick.id}) }}">edit</a>
 
     {{ include('trick/_delete_form.html.twig') }}
+</div>
+
+<div class="container my-5">
+    {% for comments in trick.comments %}
+    <h1>Commentaires</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Content</th>
+            <td>{{ comments.content }}</td>
+        </tr>
+        <tr>
+            <th>CreatedAt</th>
+            <td>{{ comments.createdAt ? comments.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_comment_index') }}">back to list</a>
+
+    <a href="{{ path('app_comment_edit', {'id': comments.id}) }}">edit</a>
+    {{ include('comment/_delete_form.html.twig') }}
+    {% endfor %}
+    {{ include('comment/_form.html.twig') }}
+</div>
+
 {% endblock %}
