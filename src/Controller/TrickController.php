@@ -88,7 +88,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY') === false) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_register');
 
         } if ($this->getUser() === $trick->getUserTrick() || $this->isGranted('ROLE_ADMIN')) {
 
@@ -121,7 +121,7 @@ class TrickController extends AbstractController
     public function delete(Request $request, Trick $trick, TrickRepository $trickRepository): Response
     {
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY') === false) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_register');
 
         } if ($this->getUser() === $trick->getUserTrick() || $this->isGranted('ROLE_ADMIN')) {
 

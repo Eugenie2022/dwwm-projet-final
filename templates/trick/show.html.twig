@@ -14,38 +14,59 @@
             <img width="500px" src="/uploads/{{ trick.thumbnail }}" alt="{{ trick.nameTrick }}">
         </div>
     </div>
+{% if app.user %}
+    {% if trick.userTrick.id == app.user.id or is_granted('ROLE_ADMIN') %}
+    <div class="d-flex justify-content-start align-items-center">
+        <button class="btn btn-outline-info mx-2" href="{{ path('app_trick_edit', {'id': trick.id}) }}">Modifier</button>
+        {{ include('trick/_delete_form.html.twig') }}
+    </div>
+    {% endif %}
+{% endif %}
 
-
-    <a href="{{ path('app_trick_index') }}">back to list</a>
-
-    <a href="{{ path('app_trick_edit', {'id': trick.id}) }}">edit</a>
-
-    {{ include('trick/_delete_form.html.twig') }}
 </div>
 
-<div class="container my-5">
-    {% for comments in trick.comments %}
+    <div class="container">
     <h1>Commentaires</h1>
+        <div class="row bootstrap snippets bootdeys">
+            <div class="col-md-8 col-sm-12">
+                <div class="comment-wrapper">
+                    <div class="panel panel-info">
+                        {% if app.user %}
+                        {{ include('comment/_form.html.twig') }}
+                        {% endif %}
+                            <ul class="media-list">
+                            {% for comments in trick.comments %}
+                                <div class="media">
+                                    <div class="pull-left">
+                                        <img src="/uploads/{{ comments.userCom.photo }}" alt="" class="img-circle">
+                                    </div>
+                                    <div class="media-body">
+                                        <span class="text-muted pull-right">
+                                            <small class="text-muted">{{ comments.createdAt ? comments.createdAt|date('Y-m-d') : '' }}</small>
+                                        </span>
+                                        <strong class="text-success m-2">{{ comments.userCom }}</strong>
+                                        <p class="mx-2">{{ comments.content }}</p>
+                                    </div>
+                                </div>
+                                {% if app.user %}
+                                    {% if trick.userTrick.id == app.user.id or is_granted('ROLE_ADMIN') %}
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <a class="btn btn-outline-info mx-2" href="{{ path('app_comment_edit', {'id': comments.id}) }}">Modifier</a>
+                                        {{ include('comment/_delete_form.html.twig') }}
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Content</th>
-            <td>{{ comments.content }}</td>
-        </tr>
-        <tr>
-            <th>CreatedAt</th>
-            <td>{{ comments.createdAt ? comments.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_comment_index') }}">back to list</a>
-
-    <a href="{{ path('app_comment_edit', {'id': comments.id}) }}">edit</a>
-    {{ include('comment/_delete_form.html.twig') }}
-    {% endfor %}
-    {{ include('comment/_form.html.twig') }}
-</div>
+            </div>
+        <div class="d-flex justify-content-end m-2">
+            <button class="btn btn-primary" href="{{ path('home') }}">Retour</button>
+        </div>
+        </div>
+    </div>
 
 {% endblock %}
